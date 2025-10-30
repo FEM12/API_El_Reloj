@@ -19,9 +19,7 @@ public class ExtraController {
 
     @GetMapping
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<Response> getExtrasWithCategory(
-        Authentication authentication
-    ) {
+    public ResponseEntity<Response> getExtrasWithCategory(Authentication authentication) {
 
         String email = authentication.getName();
         return extraService.getExtrasWithCategory();

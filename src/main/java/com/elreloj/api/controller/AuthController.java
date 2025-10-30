@@ -1,5 +1,6 @@
 package com.elreloj.api.controller;
 
+import com.elreloj.api.dto.request.UpdatePasswordResquest;
 import com.elreloj.api.dto.request.UserSignInRequest;
 import com.elreloj.api.dto.request.UserSignUpRequest;
 import com.elreloj.api.dto.response.Response;
@@ -7,6 +8,8 @@ import com.elreloj.api.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,5 +29,16 @@ public class AuthController {
         return authService.signUp(userSignUpRequest);
     }
 
+    @PutMapping("/update_password")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Response> updatePassword(
+        Authentication authentication,
+        @Valid @RequestBody UpdatePasswordResquest updatePasswordResquest
+    ) {
+
+        String email = authentication.getName();
+        return authService.updatePassword(email,updatePasswordResquest);
+
+    }
 
 }

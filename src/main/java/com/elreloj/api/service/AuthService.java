@@ -1,6 +1,7 @@
 package com.elreloj.api.service;
 
 import com.elreloj.api.config.JwtUtils;
+import com.elreloj.api.dto.request.UpdatePasswordResquest;
 import com.elreloj.api.dto.request.UserSignInRequest;
 import com.elreloj.api.dto.request.UserSignUpRequest;
 import com.elreloj.api.dto.response.Response;
@@ -64,7 +65,7 @@ public class AuthService {
             );
 
         }
-        catch (BadCredentialsException e) {
+        catch(BadCredentialsException e) {
 
             return ResponseEntity.status(401).body(
                 Response.builder()
@@ -97,12 +98,54 @@ public class AuthService {
             );
 
         }
-        catch (Exception e) {
+        catch(Exception e) {
 
             return ResponseEntity.status(404).body(
                 Response.builder()
                     .status("Failure")
                     .messages(List.of("That email is already in use"))
+                    .build()
+            );
+
+        }
+
+    }
+
+    public ResponseEntity<Response> updatePassword(
+        String email,
+        UpdatePasswordResquest updatePasswordResquest
+    ) {
+
+        try {
+
+            User getUser = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new BadCredentialsException("Incorrect email"));
+
+            if(!passwordEncoder.matches(updatePasswordResquest.getOld_password(),getUser.getPassword())) {
+                throw new BadCredentialsException("Incorrect password");
+            }
+
+            User user = getUser.toBuilder()
+                .password(passwordEncoder.encode(updatePasswordResquest.getNew_password()))
+                .build();
+
+
+            userRepository.save(user);
+
+            return ResponseEntity.ok(
+                Response.builder()
+                    .status("Success")
+                    .messages(List.of("Password updated successfully"))
+                    .build()
+            );
+
+        }
+        catch(BadCredentialsException e) {
+
+            return ResponseEntity.status(401).body(
+                Response.builder()
+                    .status("Failure")
+                    .messages(List.of(e.getMessage()))
                     .build()
             );
 
