@@ -41,4 +41,9 @@ public class AuthController {
 
     }
 
+    @GetMapping("/recover_password/{email}")
+    public ResponseEntity<Response> recoverPassword(@PathVariable("email") String email) {
+        return authService.recoverPassword(email);
+    }
+
 }

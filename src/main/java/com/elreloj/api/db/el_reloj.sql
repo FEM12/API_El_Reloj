@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `order_details_extras`(
 )ENGINE=InnoDB;
 
 INSERT INTO `users` VALUES
-(DEFAULT,'Alexis Baldomero Zelaya Contreras','example01@gmail.com','$2a$14$/IkaSNsTc32Jr18hSun8dO9adeZviaHto7yraARlE5wqVLdMWc8SS');
+(DEFAULT,'Alexis Baldomero Zelaya Contreras','dedpoolninguno@gmail.com','$2a$14$/IkaSNsTc32Jr18hSun8dO9adeZviaHto7yraARlE5wqVLdMWc8SS');
 
 INSERT INTO `categories` VALUES
 ('BC749302','Bebidas calientes','Aromáticas y reconfortantes, perfectas para acompañar momentos de relax o iniciar el día con energía.'),

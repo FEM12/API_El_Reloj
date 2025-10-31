@@ -121,14 +121,9 @@ public class AuthService {
             User getUser = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new BadCredentialsException("Incorrect email"));
 
-            if(!passwordEncoder.matches(updatePasswordResquest.getOld_password(),getUser.getPassword())) {
-                throw new BadCredentialsException("Incorrect password");
-            }
-
             User user = getUser.toBuilder()
                 .password(passwordEncoder.encode(updatePasswordResquest.getNew_password()))
                 .build();
-
 
             userRepository.save(user);
 
@@ -136,6 +131,43 @@ public class AuthService {
                 Response.builder()
                     .status("Success")
                     .messages(List.of("Password updated successfully"))
+                    .build()
+            );
+
+        }
+        catch(BadCredentialsException e) {
+
+            return ResponseEntity.status(401).body(
+                Response.builder()
+                    .status("Failure")
+                    .messages(List.of(e.getMessage()))
+                    .build()
+            );
+
+        }
+
+    }
+
+    public ResponseEntity<Response> recoverPassword(String email) {
+
+
+        try {
+
+            String genericPassword = "P4$$w0rd!";
+
+            User getUser = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new BadCredentialsException("Incorrect email"));
+
+            User user = getUser.toBuilder()
+                .password(passwordEncoder.encode(genericPassword))
+                .build();
+
+            userRepository.save(user);
+
+            return ResponseEntity.ok(
+                Response.builder()
+                    .status("Success")
+                    .messages(List.of(genericPassword))
                     .build()
             );
 
